@@ -40,3 +40,35 @@ Sentinel works by piping standard input/output, acting as a transparent proxy fo
 ```bash
 # Simulating an attack via pipeline
 cat attack.json | python gateway.py
+Configuration (Claude Desktop)
+You can use Sentinel as a wrapper for any MCP server in your claude_desktop_config.json:
+
+JSON
+
+"mcpServers": {
+  "sqlite": {
+    "command": "python",
+    "args": [
+      "/absolute/path/to/gateway.py", 
+      "uvx", 
+      "sqlite-mcp", 
+      "--db-path", 
+      "test.db"
+    ]
+  }
+}
+🗺️ Roadmap
+[x] v0.1: Python-based JSON-RPC Interceptor (Basic SQL Rules).
+
+[ ] v0.2: External Policy Config (YAML) - Decoupling logic from code.
+
+[ ] v0.3: OPA (Open Policy Agent) Integration for Enterprise Rules.
+
+[ ] v1.0: Audit Logging Dashboard.
+
+🤝 Collaboration & Pilot
+I am building this in public to solve a specific problem: Safe adoption of Agentic AI in Enterprise environments.
+
+I am looking for 3 Design Partners (CTOs / Architects) who are currently deploying MCP tools and want to test these guardrails.
+
+Contact me: https://www.linkedin.com/in/pawel-pisarski/
