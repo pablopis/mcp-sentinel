@@ -1,0 +1,11 @@
+{
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "query_database",
+      "arguments": {
+        "query": "SELECT * FROM users_sensitive_data"
+      }
+    },
+    "id": "req_20260107_365866"
+  }
