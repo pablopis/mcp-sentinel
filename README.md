@@ -28,7 +28,8 @@ It intercepts JSON-RPC messages in real-time to enforce **State & Logic Policies
 - ✅ **Subprocess Management:** Spawns and manages wrapped MCP servers
 - ✅ **Audit Logging:** Structured JSON logs of all blocked requests to `security_audit.log`
 - ✅ **Clean Output Separation:** JSON-RPC on stdout, colored logs on stderr
-- 🛑 **Circuit Breaker:** (Roadmap) Stops infinite loops and excessive tool usage
+- ✅ **Circuit Breaker:** Rate limiting to stop infinite loops and excessive tool usage
+- ✅ **Schema Validation:** Robust Pydantic-based validation for policy files
 - 🚦 **Human-in-the-Loop:** (Roadmap) Pauses execution for critical actions (DELETE/DROP) requiring approval
 
 ## 📸 Proof of Concept
@@ -105,8 +106,9 @@ Use Sentinel as a wrapper for any MCP server in Claude Desktop.
 
 **Validation Logic:**
 - Only `tools/call` messages are validated (initialization and other messages pass through)
-- Current policy: Block `SELECT` queries without `LIMIT` clause
-- Future: External policy configuration (YAML), OPA integration
+- Policy loaded from `security_policy.yaml` (configurable via `MCP_POLICY_FILE` env var)
+- Supports operators: `contains`, `not_contains`, `equals`, `regex`
+- Supports wildcard tool matching (e.g., `target_tool: "*"` or `target_tool: "query_*"`)
 
 ## 📊 Audit Logging
 
@@ -171,17 +173,22 @@ tail -n 10 security_audit.log | jq .
 - [x] Structured audit logging to JSON Lines format
 - [x] Basic SQL exfiltration prevention policy
 
-**v0.2 - Enhanced Configurability**
-- [ ] External Policy Config (YAML) - Decoupling rules from code
-- [ ] HTTP/SSE Transport Layer - Gateway as HTTP proxy for remote MCP servers
+**v0.2 - Enhanced Configurability** ✅
+- [x] External Policy Config (YAML) - Decoupling rules from code
+- [x] Regex and wildcard support in conditions
+- [x] Environment variable configuration (`MCP_POLICY_FILE`, `MCP_AUDIT_LOG`)
 - [ ] Multiple policy profiles (development, staging, production)
-- [ ] Policy hot-reload without restart
+- [x] Policy hot-reload without restart (SIGHUP)
 
 **v0.3 - Enterprise Features**
+
+- [x] Circuit Breaker: Rate limiting and infinite loop detection
+- [x] Human-in-the-Loop: Approval workflow for critical actions (DELETE, DROP)
+
+**v0.4 - Scalability & Connectivity**
+- [ ] HTTP/SSE Transport Layer: Gateway as HTTP proxy for remote MCP servers
+- [ ] Metrics Endpoint: Prometheus-compatible metrics (requests, blocks, latency)
 - [ ] OPA (Open Policy Agent) Integration for complex rules
-- [ ] Circuit Breaker: Rate limiting and infinite loop detection
-- [ ] Human-in-the-Loop: Approval workflow for critical actions (DELETE, DROP)
-- [ ] Metrics endpoint (Prometheus format)
 
 **v1.0 - Full Platform**
 - [ ] Web-based Audit Logging Dashboard
